@@ -4,7 +4,7 @@ const router = express.Router()
 
 
 // user register endpoint
-router.post('/regiester', userRegistration)
+router.post('/register', userRegistration)
 router.post('/login', userLogin)
 
 
