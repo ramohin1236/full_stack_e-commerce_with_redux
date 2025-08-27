@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+/* eslint-disable react/no-unescaped-entities */
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useLoginUserMutation } from "../redux/features/auth/authApi";
 import Swal from 'sweetalert2'
 const Login = () => {
-  const [message, setMessage] = useState("");
+//   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -12,15 +13,16 @@ const Login = () => {
   } = useForm();
   //  mutation user kkorle [] user korte hoy
   // query use korle {} use korte hoy
+  // eslint-disable-next-line no-unused-vars
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
 
   const onSubmit = async (data) => {
     try {
       const response = await loginUser(data).unwrap();
       Swal.fire(`${response?.user?.userName} logged in successfully!`);
-      console.log("Login Successful", response);
+      navigate("/");
     } catch (err) {
-      console.log("Login Failed->", err?.data?.message);
+         Swal.fire(err?.data?.message);
     }
   };
   return (

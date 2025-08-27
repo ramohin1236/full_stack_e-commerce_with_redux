@@ -1,14 +1,24 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
+import { useRegisterUserMutation } from '../redux/features/auth/authApi';
 
 const Register = () => {
+    // eslint-disable-next-line no-unused-vars
     const [message, setMessage] = useState('');
-
+     const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors }, } = useForm()
 
-    const onSubmit = (data) => {
-        console.log(data)
+    // eslint-disable-next-line no-unused-vars
+    const [registerUser, { isLoading, error }] = useRegisterUserMutation()
+
+    const onSubmit = async (data) => {
+        try {
+            await registerUser(data).unwrap();
+            navigate("/login");
+        } catch (err) {
+            setMessage(err.data.message);
+        }
     }
     return (
         <section className='h-screen flex items-center justify-center p-2'>
@@ -17,7 +27,7 @@ const Register = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-3 max-w-sm mx-auto pt-6'>
 
                     <input
-                        {...register("username", { required: true })}
+                        {...register("userName",{ required: true })}
                         type="text" placeholder='Username' className='w-full bg-gray-100 focus:outline-none px-5 py-3' />
                     {errors.username && <p className='text-red-500 text-sm'>Username is required</p>}
 
